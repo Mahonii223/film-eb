@@ -2,11 +2,11 @@
   <div class="card">
     <div class="card-content">
       <div class="content columns">
-        <div class="column">
-          <h3>{{ record.title }}</h3>
-          <h4>Reżyseria: {{ record.director }}</h4>
-          <p>Rok: {{ record.year }}</p>
-          <p>{{ record.description }}</p>
+        <div class="column is-flex">
+          <h3 class="mt-4">{{ record.name }} ({{ record.year }})</h3>
+          <!-- <h4>Reżyseria: {{ record.director }}</h4> -->
+          <!-- <p>Rok: {{}}</p> -->
+          <!-- <p>{{ record.description }}</p> -->
         </div>
         <div class="column is-one-fifth is-flex">
           <div class="buttons is-centered">

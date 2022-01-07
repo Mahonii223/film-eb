@@ -55,7 +55,7 @@ export default class Welcome extends Vue {
       const user = await verified.json();
 
       store.setToken(response.credential);
-      store.setLoggedIn(user.name);
+      store.setLoggedIn(user.username);
     } catch (e) {
       console.log(e);
     }

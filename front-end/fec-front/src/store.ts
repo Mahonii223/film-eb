@@ -2,9 +2,7 @@ import { reactive } from "@vue/reactivity";
 
 export interface Movie {
   id: string;
-  title: string;
-  director: string;
-  description: string;
+  name: string;
   year: number;
 }
 
@@ -32,11 +30,15 @@ export const store = {
   },
 
   setRecommended(newValue: []): void {
-    this.state.recommended = newValue;
+    if (Array.isArray(newValue)) {
+      this.state.recommended = newValue;
+    }
   },
 
   setSearchResults(newValue: []): void {
-    this.state.search = newValue;
+    if (Array.isArray(newValue)) {
+      this.state.search = newValue;
+    }
   },
 
   clear(): void {
