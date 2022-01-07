@@ -27,6 +27,7 @@ function getEurekaInstance(name) {
  */
 function getUrlFromInstance(config) {
   return `http://${config.hostName}:${config.port.$}`;
+  // return `http://localhost:${config.port.$}`;
 }
 
 function getUrl(id) {
@@ -47,11 +48,30 @@ router.get("/search", async (req, res, next) => {
     const searchParams = new URL(req.url, `http://${req.headers.host}`)
       .searchParams;
 
-    const redir = await got.get(getUrl("rating-management"), {
+    const url = new URL("/search", getUrl("rating-management")).toString();
+    const redir = await got.get(url, {
       searchParams,
     });
 
-    res.status(redir.statusCode).json(redir.body);
+    res.status(redir.statusCode).json(JSON.parse(redir.body));
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
+});
+
+router.post("/add", async (req, res, next) => {
+  console.log("add");
+  try {
+    const url = new URL("/add", getUrl("rating-management")).toString();
+    const redir = await got.post(url, {
+      json: {
+        name: req.body?.name,
+        year: req.body?.year,
+      },
+    });
+
+    res.status(redir.statusCode).json(JSON.parse(redir.body));
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
@@ -95,7 +115,7 @@ router.post("/join", async (req, res, next) => {
       json: res.locals.auth,
     });
 
-    res.status(redir.statusCode).json(redir.body);
+    res.status(redir.statusCode).json(JSON.parse(redir.body));
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
@@ -109,13 +129,39 @@ router.get("/recommended", async (req, res, next) => {
       "/checkrecommended",
       getUrl("recommendation-processing")
     ).toString();
-    const redir = await got.post(url, {
-      json: {
-        userId: res.locals.auth.userId,
+
+    const redir = await got.get(url, {
+      searchParams: {
+        token: res.locals.auth.userId,
       },
     });
 
-    res.status(redir.statusCode).json(redir.body);
+    res.status(redir.statusCode).json(JSON.parse(redir.body));
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
+});
+
+router.post("/rate", async (req, res, next) => {
+  console.log("rate", res.locals.auth.nickname);
+  try {
+    const url = new URL("/rate", getUrl("rating-management")).toString();
+    const redir = await got.post(url, {
+      json: {
+        token: res.locals.auth.userId,
+        movieId: req.body?.movieId,
+        score: req.body?.score,
+        cat1: Number(req.body?.cat1),
+        cat2: Number(req.body?.cat2),
+        cat3: Number(req.body?.cat3),
+        cat4: Number(req.body?.cat4),
+        cat5: Number(req.body?.cat5),
+        cat6: Number(req.body?.cat6),
+      },
+    });
+
+    res.status(redir.statusCode).json(JSON.parse(redir.body));
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
