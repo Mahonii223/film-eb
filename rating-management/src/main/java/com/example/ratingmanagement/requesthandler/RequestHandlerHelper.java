@@ -21,7 +21,7 @@ public class RequestHandlerHelper {
         bodyMap.put("name", name);
         bodyMap.put("year", year);
 
-        bodyMap.put("createDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+        bodyMap.put("createDate", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
 
         for(int i = 1; i<=6; i++){
             bodyMap.put("cat"+i, "3");
