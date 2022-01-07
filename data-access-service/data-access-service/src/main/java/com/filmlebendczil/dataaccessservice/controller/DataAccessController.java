@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.ws.rs.PathParam;
@@ -95,59 +97,64 @@ public class DataAccessController {
 	}
 	//aktualizacja ratingu danego filmu i dodanie ratingu do bazy 
 	@PostMapping("/update-rating")
-	public void updateRating(@RequestBody String ratingString) throws JsonProcessingException {
+	public Object updateRating(@RequestBody String ratingString) throws JsonProcessingException {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Object> request = mapper.readValue(ratingString, new TypeReference<Map<String, Object>>() {
+			});
+			//token po którym szukamy uzytkownika
+			String value = (String) request.get("token");
+			//id uzytkownika ktore jest dodawane do movie rating
+			Long memberId = memberRepo.findByToken(value).getID();
+
+			Long movieId = Long.valueOf((Integer) request.get("movieId"));
+			MovieRating rating = new MovieRating();
+			rating.setMovieId(movieId);
+			rating.setMemberId(memberId);
+			rating.setCat1((double) request.get("cat1"));
+			rating.setCat2((double) request.get("cat2"));
+			rating.setCat3((double) request.get("cat3"));
+			rating.setCat4((double) request.get("cat4"));
+			rating.setCat5((double) request.get("cat5"));
+			rating.setCat6((double) request.get("cat6"));
+			rating.setScore((double) request.get("score"));
 
 
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> request = mapper.readValue(ratingString, new TypeReference<Map<String, Object>>() {
-		});
-		//token po którym szukamy uzytkownika
-		String value =(String) request.get("token");
-		//id uzytkownika ktore jest dodawane do movie rating
-		Long memberId = memberRepo.findByUserId(value).getID();
-		
-		Long movieId = (Long)request.get("movieId");
-		MovieRating rating = new MovieRating();
-		rating.setMovieId(movieId);
-		rating.setMemberId(memberId);
-		rating.setCreateDate((Date)request.get("createDate"));
-		rating.setCat1((double)request.get("cat1"));
-		rating.setCat2((double)request.get("cat2"));
-		rating.setCat3((double)request.get("cat3"));
-		rating.setCat4((double)request.get("cat4"));
-		rating.setCat5((double)request.get("cat5"));
-		rating.setCat6((double)request.get("cat6"));
-		rating.setScore((double)request.get("score"));
-		
-		
-		movieRatingRepo.save(rating);
+			movieRatingRepo.save(rating);
 
-		Optional<Movie> movie = movieRepo.findById(movieId);
-		Movie toUpdate = movie.get();
+			Optional<Movie> movie = movieRepo.findById(movieId);
+			Movie toUpdate = movie.get();
 
-		List<MovieRating> allRatings = movieRatingRepo.findAllByMovieId(movieId);
-		int counter = 0;
-		double sum1 = 0.0;			
-		double sum2 = 0.0;
-		double su3 = 0.0;
-		double sum4 = 0.0;
-		double sum5 = 0.0;
-		double sum6 = 0.0;
+			List<MovieRating> allRatings = movieRatingRepo.findAllByMovieId(movieId);
+			int counter = 0;
+			double sum1 = 0.0;
+			double sum2 = 0.0;
+			double sum3 = 0.0;
+			double sum4 = 0.0;
+			double sum5 = 0.0;
+			double sum6 = 0.0;
 
-		for (MovieRating mr : allRatings) {
-			counter++;
-			sum1 += mr.getCat1();
-			sum2 += mr.getCat2();
-			sum3 += mr.getCat3();
-			sum4 += mr.getCat4();
-			sum5 += mr.getCat5();
-			sum6 += mr.getCat6();
+			for (MovieRating mr : allRatings) {
+				counter++;
+				sum1 += mr.getCat1();
+				sum2 += mr.getCat2();
+				sum3 += mr.getCat3();
+				sum4 += mr.getCat4();
+				sum5 += mr.getCat5();
+				sum6 += mr.getCat6();
+			}
+
+			toUpdate.setRatings(counter, sum1, sum2, sum3, sum4, sum5, sum6);
+			movieRepo.save(toUpdate);
+			updateUserProfile(memberId);
+
+			return ResponseEntity.ok().build();
+		} catch (Exception e){
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(e.getMessage());
 		}
-
-		toUpdate.setRatings(counter, sum1, sum2, sum3, sum4, sum5, sum6);
-		movieRepo.save(toUpdate);
-		updateUserProfile(memberId);
-		}
+	}
 	// aktualizacja profilu uzytkownika
 	public void updateUserProfile(Long userId) throws JsonProcessingException {
 		List<MovieRating> ratingByUser = movieRatingRepo.findAllByMemberId(userId);
@@ -206,7 +213,7 @@ public class DataAccessController {
 
 	@GetMapping("/check-recommendation")
 	public ResponseEntity<Object> checkRecommendations(
-			@RequestParam((name = "token") String token, 
+			@RequestParam(name = "token") String token,
 			@RequestParam(name = "amountOfMovies") int amountOfMovies,
 			@RequestParam(name = "multipliers")  String multipliers) 
 			throws JsonMappingException, JsonParseException, JsonProcessingException {
@@ -215,7 +222,7 @@ public class DataAccessController {
 		ObjectMapper mapper = new ObjectMapper();
 		Map <String,  Double> multipliersMap = mapper.readValue(multipliers, Map.class);
 		System.out.println(multipliersMap.toString());
-		Member member = memberRepo.findByUserId(token);
+		Member member = memberRepo.findByToken(token);
 		
 		List<Movie> availableMovies = movieRepo.findAll();
 		HashMap<Long, Double> map = new HashMap<Long, Double>();

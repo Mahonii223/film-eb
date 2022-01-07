@@ -1,18 +1,19 @@
 package com.filmlebendczil.dataaccessservice.entity;
 
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@SequenceGenerator(name="seq", initialValue=25, allocationSize=100)
 public class MovieRating {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
 	private Long id;
 
 	@Column(name = "movie_id")
@@ -20,9 +21,6 @@ public class MovieRating {
 
 	@Column(name = "member_id")
 	private Long memberId;
-
-	@Column(name = "creation_date")
-	private Date createDate;
 	
 	@Column(name = "cat1")
 	private double cat1;
@@ -49,12 +47,11 @@ public class MovieRating {
 		super();
 	}
 
-	public MovieRating(Long movieId, Long memberId, Date createDate, double cat1, double cat2, double cat3, double cat4,
+	public MovieRating(Long movieId, Long memberId, double cat1, double cat2, double cat3, double cat4,
 			double cat5, double cat6, double score) {
 		super();
 		this.movieId = movieId;
 		this.memberId = memberId;
-		this.createDate = createDate;
 		this.cat1 = cat1;
 		this.cat2 = cat2;
 		this.cat3 = cat3;
@@ -86,14 +83,6 @@ public class MovieRating {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
 	}
 
 	public double getCat1() {
