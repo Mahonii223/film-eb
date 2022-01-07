@@ -8,12 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Table(name = "MEMBER")
+@SequenceGenerator(name="seq", initialValue=25, allocationSize=100)
 public class Member {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
 	private Long ID;
 	
 	@Column(name = "token")

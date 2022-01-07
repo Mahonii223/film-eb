@@ -9,13 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Table(name = "MOVIE")
+@SequenceGenerator(name="seq", initialValue=25, allocationSize=100)
 public class Movie {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
 	private Long ID;
 
 	@Column(name = "name")
