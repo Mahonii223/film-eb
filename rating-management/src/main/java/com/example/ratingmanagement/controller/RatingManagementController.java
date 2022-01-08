@@ -90,7 +90,10 @@ public class RatingManagementController {
     public Object logtest(){
         try {
 
-            logCollector.addLog("INFO", "test log");
+            logCollector.addLog("INFO", "Example info log");
+            logCollector.addLog("GIBBERISH", "Exampul gibberush Bog");
+            logCollector.addLog("ERROR", "Example error log");
+
             logCollector.release();
             return ResponseEntity.ok().build();
 

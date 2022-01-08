@@ -1,7 +1,9 @@
 package com.example.ratingmanagement.requesthandler;
 
+import com.example.ratingmanagement.logger.LogCollector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ import java.util.Map;
 @Component
 @Service
 public class RequestHandlerHelper {
+
+    @Autowired
+    private LogCollector logCollector;
 
     public String generateAddMovieRequestBody(String name, String year){
 
@@ -30,8 +35,11 @@ public class RequestHandlerHelper {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            return objectMapper.writeValueAsString(bodyMap);
+            String ret = objectMapper.writeValueAsString(bodyMap);
+            logCollector.addLog("INFO", "Generated <AddMovie> request body " + ret);
+            return ret;
         } catch (JsonProcessingException e){
+            logCollector.addLog(e);
             throw new RuntimeException("Could not process JSON: " + bodyMap.toString() + e.getMessage());
         }
     }

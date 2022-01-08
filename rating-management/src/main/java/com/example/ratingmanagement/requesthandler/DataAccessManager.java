@@ -53,6 +53,8 @@ public class DataAccessManager {
 
         try {
 
+            logCollector.addLog("INFO", "Generating request for service: " + service);
+
             URI uri = generateURI(service, uriParams);
 
             HttpRequest.Builder builder = HttpRequest.newBuilder()
