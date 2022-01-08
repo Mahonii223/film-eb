@@ -3,6 +3,7 @@ eureka:
   port: 8761
   servicePath: "/eureka/apps/"
   registryFetchInterval: 1000
+  maxRetries: 10
 instance:
   app: "front-server"
   port: 80
