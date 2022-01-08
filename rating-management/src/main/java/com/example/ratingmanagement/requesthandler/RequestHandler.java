@@ -39,10 +39,11 @@ public class RequestHandler {
 
     public void addMovie(String basicInfoJson) throws JsonProcessingException {
 
-        Map<String,String> basicInfo =
+        Map<String,Object> basicInfo =
                 new ObjectMapper().readValue(basicInfoJson, HashMap.class);
 
-        HttpResponse<String> response = dataAccessManager.callDA("add", helper.generateAddMovieRequestBody(basicInfo.get("name"), basicInfo.get("year")));
+        HttpResponse<String> response = dataAccessManager.callDA("add",
+                helper.generateAddMovieRequestBody(String.valueOf(basicInfo.get("name")), String.valueOf(basicInfo.get("year"))));
 
         if(response.statusCode() != 200){
             throw new RuntimeException("Add request was made but the response was unsuccessful. " + response.body());
