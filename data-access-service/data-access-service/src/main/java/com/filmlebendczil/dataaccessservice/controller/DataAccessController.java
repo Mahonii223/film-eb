@@ -64,7 +64,7 @@ public class DataAccessController {
 		// \"director\": \"Nobody\", \"year\": 2020 }, { \"title\": \"Another test\",
 		// \"description\": \"Another test movie. Electric boogaloo!\", \"director\":
 		// \"Somebody\", \"year\": 2021 } ]";
-		List<Movie> resultList = movieRepo.findByNameContaining(phrase);
+		List<Movie> resultList = movieRepo.findByNameContainingIgnoreCase(phrase);
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -111,12 +111,12 @@ public class DataAccessController {
 			MovieRating rating = new MovieRating();
 			rating.setMovieId(movieId);
 			rating.setMemberId(memberId);
-			rating.setCat1((double) request.get("cat1"));
-			rating.setCat2((double) request.get("cat2"));
-			rating.setCat3((double) request.get("cat3"));
-			rating.setCat4((double) request.get("cat4"));
-			rating.setCat5((double) request.get("cat5"));
-			rating.setCat6((double) request.get("cat6"));
+			rating.setCat1(Double.valueOf((Integer) request.get("cat1")));
+			rating.setCat2(Double.valueOf((Integer) request.get("cat2")));
+			rating.setCat3(Double.valueOf((Integer) request.get("cat3")));
+			rating.setCat4(Double.valueOf((Integer) request.get("cat4")));
+			rating.setCat5(Double.valueOf((Integer) request.get("cat5")));
+			rating.setCat6(Double.valueOf((Integer) request.get("cat6")));
 			rating.setScore((double) request.get("score"));
 
 

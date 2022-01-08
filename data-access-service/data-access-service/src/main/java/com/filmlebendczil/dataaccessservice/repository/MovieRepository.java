@@ -9,6 +9,6 @@ import com.filmlebendczil.dataaccessservice.entity.Movie;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long>{
 	Movie findByName(String name);
-	List<Movie> findByNameContaining(String name);
+	List<Movie> findByNameContainingIgnoreCase(String name);
 	Movie findById(long Id);
 }
