@@ -1,1 +1,12 @@
+com\example\ratingmanagement\requesthandler\DataAccessManager$2.class
+com\example\ratingmanagement\requesthandler\DataAccessManager$1.class
+com\example\ratingmanagement\requesthandler\RequestHandlerHelper.class
+com\example\ratingmanagement\logger\LogCollector$Log.class
+com\example\ratingmanagement\performancemonitoring\AopConfiguration.class
+com\example\ratingmanagement\performancemonitoring\LoggingPerformanceMonitorInterceptor.class
 com\example\ratingmanagement\RatingManagementApplication.class
+com\example\ratingmanagement\logger\LogMessenger.class
+com\example\ratingmanagement\controller\RatingManagementController.class
+com\example\ratingmanagement\logger\LogCollector.class
+com\example\ratingmanagement\requesthandler\RequestHandler.class
+com\example\ratingmanagement\requesthandler\DataAccessManager.class
