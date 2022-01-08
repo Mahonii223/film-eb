@@ -71,7 +71,7 @@ router.post("/add", async (req, res, next) => {
       },
     });
 
-    res.status(redir.statusCode).json(JSON.parse(redir.body));
+    res.status(redir.statusCode);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
@@ -161,7 +161,7 @@ router.post("/rate", async (req, res, next) => {
       },
     });
 
-    res.status(redir.statusCode).json(JSON.parse(redir.body));
+    res.status(redir.statusCode);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
